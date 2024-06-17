@@ -10,7 +10,7 @@ class Pelicula(db.Model):
     estreno= db.Column(db.String(255), nullable=False)
     director= db.Column(db.String(255), nullable=False)
     genero= db.Column(db.String(255), nullable=False)
-    plataforma_id= db.Column(db.Integer, db.ForeignKey)
+    plataforma_id= db.Column(db.Integer, db.ForeignKey('plataformas.id'))
     imagen= db.Column(db.String(255))
 
 class Plataforma(db.Model):
@@ -22,6 +22,6 @@ class Plataforma(db.Model):
 class Opinion(db.Model):
     __tablename__= 'opiniones'
     id= db.Column(db.Integer, primary_key=True)
-    pelicula_id= db.Column(db.Integer, db.ForeignKey)
+    pelicula_id= db.Column(db.Integer, db.ForeignKey('peliculas.id'))
     valoracion= db.Column(db.Integer)
     comentario= db.Column(db.String(255), nullable= False)
