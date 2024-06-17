@@ -1,5 +1,5 @@
 from flask import Flask 
-from models import db
+from models import db, Pelicula, Plataforma, Opinion
 
 app = Flask(__name__)
 port = 5000
