@@ -3,10 +3,29 @@ from models import db, Pelicula, Plataforma, Opinion
 
 app = Flask(__name__)
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:mingo21@localhost:5432/movies_web_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://joaco:joaco2005@localhost:5432/peliculas_web'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+@app.route('/peliculas', methods=['GET'])
+def mostar_peliculas():
+    peliculas = Pelicula.query.all()
+    respuesta = []
+    try:
+        for peli in peliculas:
+            respuesta.append({
+                'id': peli.id,
+                'titulo': peli.titulo,
+                'sinopsis': peli.sinopsis,
+                'estreno': peli.estreno,
+                'director': peli.director,
+                'genero': peli.genero,
+                'plataforma_id': peli.plataforma_id,
+                'imagen': peli.imagen
+            })
+    except Exception as error:
+        print("error: " + str(error))
+    return jsonify(respuesta)
 
 #ruta para agregar una plataforma
 @app.route('/agregar_plataforma', methods=['POST'])
@@ -53,9 +72,7 @@ def agregar_pelicula():
     return jsonify({'mensaje': 'Película agregada correctamente'}), 201
 
 # ruta de prueba
-@app.route('/')
-def hello_world():
-    return 'Hello world!'
+
 
 if __name__ == '__main__':
     with app.app_context():
