@@ -3,10 +3,11 @@ from models import db, Pelicula, Plataforma, Opinion, peliculas_plataformas
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(app, origins=["http://localhost:8000"])
 
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://joaco:joaco2005@localhost:5432/peliculas_web'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://guido:guido@localhost:5432/peliculas'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
