@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pelis</title>
+    <title>Heroes</title>
 </head>
+
 <body>
     <h1>Peliculas</h1>
     <div>
@@ -23,21 +25,23 @@
         </ul>
 
     </div>
-    
+
     <script>
         function respuesta_recivida(data){
             return data.json()
         }
         
     function mostrar_peliculas(data){
-        let i
-        for(i=0;i<data.length;i++){
-            let titulo= document.createElement("li")
-            titulo.InnerText= data.titulo
-            let lista= document.getElementById("listado_pelis")
-            lista.append(titulo)
+        console.log(data)
+        let i;
+        for(i=0; i<data.length; i++){
+            let titulo = document.createElement("li");
+            titulo.innerText = data[i].titulo;
+            let lista = document.getElementById("listado_pelis");
+            lista.append(titulo);
+
         }
-    }
+        }
 
     function error(mensaje){
         console.log("error")
