@@ -7,10 +7,11 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://guido:guido@localhost:5432/peliculas'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:mingo21@localhost:5432/movies_web_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
 @app.route('/peliculas', methods=['GET'])
 def mostar_peliculas():
     peliculas = Pelicula.query.all()
@@ -30,6 +31,7 @@ def mostar_peliculas():
     except Exception as error:
         print("error: " + str(error))
     return jsonify(respuesta)
+
 
 #ruta para agregar una plataforma
 @app.route('/agregar_plataforma', methods=['POST'])
@@ -54,29 +56,38 @@ def agregar_pelicula():
     estreno = request.json.get('estreno')
     director = request.json.get('director')
     genero = request.json.get('genero')
-    plataforma_id = request.json.get('plataforma_id')
+    plataformas_ids = request.json.get('plataformas')  
     imagen = request.json.get('imagen')
 
-    if not (titulo and sinopsis and estreno and director and genero and plataforma_id):
+    if not (titulo and sinopsis and estreno and director and genero and plataformas_ids):
         return jsonify({'mensaje': 'Todos los campos son requeridos'}), 400
 
+    # crear la película
     pelicula = Pelicula(
         titulo=titulo,
         sinopsis=sinopsis,
         estreno=estreno,
         director=director,
         genero=genero,
-        plataforma_id=plataforma_id,
         imagen=imagen
     )
+
+    # agregar las plataforma
+    for plataforma_id in plataformas_ids:
+        plataforma = Plataforma.query.get(plataforma_id)
+        if plataforma:
+            pelicula.plataformas.append(plataforma)
 
     db.session.add(pelicula)
     db.session.commit()
 
-    return jsonify({'mensaje': 'Película agregada correctamente'}), 201
+    return jsonify({'mensaje': 'Pelicula agregada correctamente'}), 201
+
 
 # ruta de prueba
-
+@app.route('/')
+def hello_world():
+    return 'Hello world!'
 
 if __name__ == '__main__':
     with app.app_context():
