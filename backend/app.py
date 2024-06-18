@@ -1,13 +1,12 @@
 from flask import Flask, jsonify, request
-from models import db, Pelicula, Plataforma, Opinion
+from models import db, Pelicula, Plataforma, Opinion, peliculas_plataformas
 from flask_cors import CORS
 
 app = Flask(__name__)
-
-CORS(app, supports_credentials=True)
+CORS(app)
 
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:mingo21@localhost:5432/movies_web_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://joaco:joaco2005@localhost:5432/peliculas_web'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -25,15 +24,31 @@ def mostar_peliculas():
                 'estreno': peli.estreno,
                 'director': peli.director,
                 'genero': peli.genero,
-                'plataforma_id': peli.plataforma_id,
-                'imagen': peli.imagen
+                'imagen': peli.imagen,
+                'plataformas': [plataforma.nombre for plataforma in peli.plataformas]
             })
     except Exception as error:
         print("error: " + str(error))
     return jsonify(respuesta)
 
+@app.route('/peliculas/<id_pelicula>', methods=['GET'])
+def mostrar_pelicula(id_pelicula):
+    pelicula = Pelicula.query.get(id_pelicula)
+    if not pelicula:
+        return jsonify({'mensaje': 'Pelicula no encontrada'}), 404
 
-#ruta para agregar una plataforma
+    return jsonify({
+        'id': pelicula.id,
+        'titulo': pelicula.titulo,
+        'sinopsis': pelicula.sinopsis,
+        'estreno': pelicula.estreno,
+        'director': pelicula.director,
+        'genero': pelicula.genero,
+        'imagen': pelicula.imagen,
+        'plataformas': [plataforma.nombre for plataforma in pelicula.plataformas]
+    })
+
+
 @app.route('/agregar_plataforma', methods=['POST'])
 def agregar_plataforma():
     nombre = request.json.get('nombre')
@@ -48,7 +63,6 @@ def agregar_plataforma():
 
     return jsonify({'mensaje': 'Plataforma agregada correctamente'}), 201
 
-#ruta para agregar una película
 @app.route('/agregar_pelicula', methods=['POST'])
 def agregar_pelicula():
     titulo = request.json.get('titulo')
@@ -62,7 +76,6 @@ def agregar_pelicula():
     if not (titulo and sinopsis and estreno and director and genero and plataformas_ids):
         return jsonify({'mensaje': 'Todos los campos son requeridos'}), 400
 
-    # crear la película
     pelicula = Pelicula(
         titulo=titulo,
         sinopsis=sinopsis,
@@ -72,7 +85,6 @@ def agregar_pelicula():
         imagen=imagen
     )
 
-    # agregar las plataforma
     for plataforma_id in plataformas_ids:
         plataforma = Plataforma.query.get(plataforma_id)
         if plataforma:
@@ -83,11 +95,6 @@ def agregar_pelicula():
 
     return jsonify({'mensaje': 'Pelicula agregada correctamente'}), 201
 
-
-# ruta de prueba
-@app.route('/')
-def hello_world():
-    return 'Hello world!'
 
 if __name__ == '__main__':
     with app.app_context():
