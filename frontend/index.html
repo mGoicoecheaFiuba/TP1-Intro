@@ -38,6 +38,11 @@
             lista.append(titulo)
         }
     }
+
+    function error(mensaje){
+        console.log("error")
+        return mensaje
+    }
         fetch("http://localhost:5000/peliculas").then(respuesta_recivida).then(mostrar_peliculas).catch(error)
     </script>
 </body>
