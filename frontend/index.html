@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelis</title>
+</head>
+<body>
+    <h1>Peliculas</h1>
+    <div>
+            <nav>
+                <ul>
+                    <li><a href="">Mis reseñas</a></li>
+            
+                </ul>
+                <p>buscador</p>
+            </nav>
+    </div>
+
+    <div>
+        <ul id="listado_pelis">
+            
+        </ul>
+
+    </div>
+    
+    <script>
+        function respuesta_recivida(data){
+            return data.json()
+        }
+        
+    function mostrar_peliculas(data){
+        let i
+        for(i=0;i<data.length;i++){
+            let titulo= document.createElement("li")
+            titulo.InnerText= data.titulo
+            let lista= document.getElementById("listado_pelis")
+            lista.append(titulo)
+        }
+    }
+        fetch("http://localhost:5000/peliculas").then(respuesta_recivida).then(mostrar_peliculas).catch(error)
+    </script>
+</body>
+</html>
