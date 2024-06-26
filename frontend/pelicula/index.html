@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peliculas!</title>
+</head>
+<body>
+    <div>
+        <div id="pelicula-container">
+        </div>
+        <a id="btnResena" href="/reseña">Reseña</a>
+    </div>
+    
+
+    <script>    
+        function respuesta_recibida(data){
+            return data.json()
+        }
+
+        function error(mensaje){
+            console.log(mensaje)
+            return mensaje
+        }
+        
+        function mostrar_pelicula(data) {
+            console.log("Datos de la película:", data);
+            let peliculaHTML = `
+                <h1>${data.titulo}</h1>
+                <img src="${data.imagen}" alt="${data.titulo}">
+                <p><strong>Sinopsis:</strong> ${data.sinopsis}</p>
+                <p><strong>Estreno:</strong> ${data.estreno}</p>
+                <p><strong>Director:</strong> ${data.director}</p>
+                <p><strong>Género:</strong> ${data.genero}</p>
+                <h3>Plataformas</h3>
+                <ul>
+                    ${data.plataformas.map(plataforma => `<li>${plataforma}</li>`).join('')}
+                </ul>
+            `;
+            document.getElementById('pelicula-container').innerHTML = peliculaHTML;
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                fetch(`http://localhost:5000/peliculas/${id}`)
+                    .then(respuesta_recibida)
+                    .then(mostrar_pelicula)
+                    .catch(error);
+            } else {
+                error("ID de película no proporcionado en la URL");
+            }
+        });
+    </script>
+</body>
+</html>
