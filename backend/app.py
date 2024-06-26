@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:8000"])
 
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://guido:guido@localhost:5432/peliculas'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:mingo21@localhost:5432/movies_web_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
