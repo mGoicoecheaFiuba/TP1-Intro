@@ -9,7 +9,7 @@
     <div>
         <div id="pelicula-container">
         </div>
-        <a id="btnResena" href="/reseña">Reseña</a>
+        <a id="hacer_reseña" href="/pelicula/opinion">Hacer reseña</a>
     </div>
     
 
@@ -52,6 +52,9 @@
                 error("ID de película no proporcionado en la URL");
             }
         });
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        document.getElementById("hacer_reseña").setAttribute("href", `/pelicula/opinion?id=${id}`);
     </script>
 </body>
 </html>
