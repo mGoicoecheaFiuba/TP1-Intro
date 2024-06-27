@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from models import db, Pelicula, Plataforma, Opinion, peliculas_plataformas
 from flask_cors import CORS
+from sqlalchemy import or_
 
 app = Flask(__name__)
 
@@ -14,22 +15,24 @@ db.init_app(app)
 
 @app.route('/peliculas', methods=['GET'])
 def mostar_peliculas():
-    peliculas = Pelicula.query.all()
-    respuesta = []
-    try:
-        for peli in peliculas:
-            respuesta.append({
-                'id': peli.id,
-                'titulo': peli.titulo,
-                'sinopsis': peli.sinopsis,
-                'estreno': peli.estreno,
-                'director': peli.director,
-                'genero': peli.genero,
-                'imagen': peli.imagen,
-                'plataformas': [plataforma.nombre for plataforma in peli.plataformas]
-            })
-    except Exception as error:
-        print("error: " + str(error))
+    buscar = request.args.get('buscar', None)
+
+    if buscar:
+        peliculas = Pelicula.query.filter(or_(Pelicula.titulo.ilike(f'%{buscar}%')))
+    else:
+        peliculas = Pelicula.query.all()
+
+    respuesta = [{
+        'id': peli.id,
+        'titulo': peli.titulo,
+        'sinopsis': peli.sinopsis,
+        'estreno': peli.estreno,
+        'director': peli.director,
+        'genero': peli.genero,
+        'imagen': peli.imagen,
+        'plataformas': [plataforma.nombre for plataforma in peli.plataformas]
+    } for peli in peliculas]
+
     return jsonify(respuesta)
 
 @app.route('/peliculas/<id_pelicula>', methods=['GET'])

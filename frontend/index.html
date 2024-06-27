@@ -14,6 +14,16 @@
             <div class="col">
                 <h1>Peliculas</h1>
             </div>
+            <div class="row">
+                <div class="col">
+                    <form id="searchForm">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Buscar películas...">
+                            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -23,45 +33,65 @@
     </div>
     
     <script>
-        function mostrar_peliculas(data){
-            let i;
-            listado= document.getElementById("pelis")
-            for(i=0;i<data.length;i++){
-                item= document.createElement("div")
-                item.setAttribute("class", "col-6 col-md-4 col-lg-3 col-xl-2")
+        function mostrar_peliculas(data) {
+            let listado = document.getElementById("pelis");
+            listado.innerHTML = ""; 
 
-                let card= document.createElement("a")
-                card.setAttribute("class", "card")
-                card.setAttribute("href", `/pelicula?id=${data[i].id}`)
+            for (let i = 0; i < data.length; i++) {
+                let item = document.createElement("div");
+                item.setAttribute("class", "col-6 col-md-4 col-lg-3 col-xl-2");
 
-                let card_body= document.createElement("div")
-                card_body.setAttribute("class", "card-body")
+                let card = document.createElement("a");
+                card.setAttribute("class", "card");
+                card.setAttribute("href", `/pelicula?id=${data[i].id}`);
 
-                let imagen= document.createElement("img")
-                imagen.setAttribute("class", "card-img-top")
-                imagen.setAttribute("src", data[i].imagen)
+                let card_body = document.createElement("div");
+                card_body.setAttribute("class", "card-body");
 
-                card_body.append(data[i].titulo)
+                let imagen = document.createElement("img");
+                imagen.setAttribute("class", "card-img-top");
+                imagen.setAttribute("src", data[i].imagen);
 
-                card.append(imagen)
-                card.append(card_body)
+                card_body.textContent = data[i].titulo; 
 
-                item.append(card)
+                card.append(imagen);
+                card.append(card_body);
 
-                listado.append(item)
+                item.append(card);
+
+                listado.append(item);
             }
         }
 
-        function respuesta_recivida(data){
-            return data.json()
+        function buscarPeliculas(event) {
+            event.preventDefault();
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+
+            fetch(`http://localhost:5000/peliculas?buscar=${searchTerm}`)
+                .then(respuesta_recivida)
+                .then(mostrar_peliculas)
+                .catch(error);
+        }
+        
+        function respuesta_recivida(data) {
+            return data.json();
         }
 
-
-        function error(mensaje){
-            console.log("error")
-            return mensaje
+        function error(mensaje) {
+            console.log("Error:", mensaje);
+            return mensaje;
         }
-            fetch("http://localhost:5000/peliculas").then(respuesta_recivida).then(mostrar_peliculas).catch(error)
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchForm = document.getElementById('searchForm');
+            searchForm.addEventListener('submit', buscarPeliculas);
+
+            fetch("http://localhost:5000/peliculas")
+                .then(respuesta_recivida)
+                .then(mostrar_peliculas)
+                .catch(error);
+        });
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
