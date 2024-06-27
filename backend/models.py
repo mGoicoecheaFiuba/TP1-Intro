@@ -29,6 +29,6 @@ class Plataforma(db.Model):
 class Opinion(db.Model):
     __tablename__ = 'opiniones'
     id = db.Column(db.Integer, primary_key=True)
-    pelicula_id = db.Column(db.Integer, db.ForeignKey('peliculas.id'))
+    pelicula_id = db.Column(db.Integer, db.ForeignKey('peliculas.id'), unique=True)
     valoracion = db.Column(db.Integer)
     comentario = db.Column(db.String(255), nullable=False)
