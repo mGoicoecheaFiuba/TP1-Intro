@@ -26,9 +26,9 @@
             const valoracion = document.getElementById('valoracion').value;
             console.log(id, comentario, valoracion);
             const data = {
-                comentario,
-                valoracion,
-                pelicula_id: id
+                "comentario": comentario,
+                "valoracion": valoracion,
+                "pelicula_id": id
             }
             fetch('http://localhost:5000/opinion', {
                 method: 'POST',
