@@ -22,17 +22,23 @@
                             <button class="btn btn-outline-secondary" type="submit">Buscar</button>
                         </div>
                     </form>
+                    <nav class="nav mb-3" id="plataformas">
+                        <div class="navbar-text">Plataformas: </div>
+                        <!-- aca se añaden las plataformas con javascrpt -->
+                      </nav>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <div class="container">
         <div class="row g-4" id="pelis">
         </div>
     </div>
     
     <script>
+
+        /* funcion que muestra todas las peliculas con imagenes */
         function mostrar_peliculas(data) {
             let listado = document.getElementById("pelis");
             listado.innerHTML = ""; 
@@ -63,6 +69,23 @@
             }
         }
 
+        /* funcion que agrega en la barra de plataformas las plataformas de peliculas */
+        
+        function mostrar_plataformas(data){
+            /* la variable "data" es una lista de jsons con id, imagen y nombre de cada plataforma */
+            let i
+            listado= document.getElementById("plataformas")
+
+            for(let i = 0; i < data.length; i++){
+                let plataforma= document.createElement("a")
+                plataforma.setAttribute("class", "nav-link")
+                plataforma.setAttribute("href",`/plataforma?id=${data[i].id}`)
+                plataforma.innerText= `${data[i].nombre}`
+                listado.append(plataforma)
+            }
+        }
+
+        /* funcion que se ocupa de la busqueda de peliculas */
         function buscarPeliculas(event) {
             event.preventDefault();
             const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -72,26 +95,34 @@
                 .then(mostrar_peliculas)
                 .catch(error);
         }
+
         
+        /* funcion generica que pasa a json la response del servidor al que se le hace un fetch */
         function respuesta_recivida(data) {
             return data.json();
         }
 
+        /* funcion generica que se ocupa de atrapar un posible error al hacer un fetch */
         function error(mensaje) {
             console.log("Error:", mensaje);
             return mensaje;
         }
 
+
         document.addEventListener("DOMContentLoaded", function() {
             const searchForm = document.getElementById('searchForm');
             searchForm.addEventListener('submit', buscarPeliculas);
-
+        
             fetch("http://localhost:5000/peliculas")
                 .then(respuesta_recivida)
                 .then(mostrar_peliculas)
                 .catch(error);
         });
 
+        fetch("http://localhost:5000/plataformas")
+            .then(respuesta_recivida)
+            .then(mostrar_plataformas)
+            .catch(error)
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
