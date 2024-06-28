@@ -24,24 +24,23 @@
                     </form>
                     <nav class="nav mb-3" id="plataformas">
                         <div class="navbar-text">Plataformas: </div>
-                        <!-- aca se añaden las plataformas con javascrpt -->
-                      </nav>
+                        <a class="nav-link" href="#" id="todas-peliculas">Todas</a>
+                        <!-- aca se añaden las plataformas con javascript -->
+                    </nav>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="container">
         <div class="row g-4" id="pelis">
         </div>
     </div>
-    
-    <script>
 
-        /* funcion que muestra todas las peliculas con imagenes */
+    <script>
         function mostrar_peliculas(data) {
             let listado = document.getElementById("pelis");
-            listado.innerHTML = ""; 
+            listado.innerHTML = "";
 
             for (let i = 0; i < data.length; i++) {
                 let item = document.createElement("div");
@@ -58,7 +57,7 @@
                 imagen.setAttribute("class", "card-img-top");
                 imagen.setAttribute("src", data[i].imagen);
 
-                card_body.textContent = data[i].titulo; 
+                card_body.textContent = data[i].titulo;
 
                 card.append(imagen);
                 card.append(card_body);
@@ -69,23 +68,22 @@
             }
         }
 
-        /* funcion que agrega en la barra de plataformas las plataformas de peliculas */
-        
-        function mostrar_plataformas(data){
-            /* la variable "data" es una lista de jsons con id, imagen y nombre de cada plataforma */
-            let i
-            listado= document.getElementById("plataformas")
+        function mostrar_plataformas(data) {
+            let listado = document.getElementById("plataformas");
 
-            for(let i = 0; i < data.length; i++){
-                let plataforma= document.createElement("a")
-                plataforma.setAttribute("class", "nav-link")
-                plataforma.setAttribute("href",`/plataforma?id=${data[i].id}`)
-                plataforma.innerText= `${data[i].nombre}`
-                listado.append(plataforma)
+            for (let i = 0; i < data.length; i++) {
+                let plataforma = document.createElement("a");
+                plataforma.setAttribute("class", "nav-link");
+                plataforma.setAttribute("href", `#`);
+                plataforma.dataset.id = data[i].id;
+                plataforma.innerText = `${data[i].nombre}`;
+                plataforma.addEventListener("click", function () {
+                    cargarPeliculasPorPlataforma(data[i].id);
+                });
+                listado.append(plataforma);
             }
         }
 
-        /* funcion que se ocupa de la busqueda de peliculas */
         function buscarPeliculas(event) {
             event.preventDefault();
             const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -96,34 +94,48 @@
                 .catch(error);
         }
 
-        
-        /* funcion generica que pasa a json la response del servidor al que se le hace un fetch */
         function respuesta_recivida(data) {
             return data.json();
         }
 
-        /* funcion generica que se ocupa de atrapar un posible error al hacer un fetch */
         function error(mensaje) {
             console.log("Error:", mensaje);
             return mensaje;
         }
 
+        function cargarPeliculasPorPlataforma(plataformaId) {
+            fetch(`http://localhost:5000/plataformas/${plataformaId}/peliculas`)
+                .then(respuesta_recivida)
+                .then(mostrar_peliculas)
+                .catch(error);
+        }
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const searchForm = document.getElementById('searchForm');
             searchForm.addEventListener('submit', buscarPeliculas);
-        
+
+            document.getElementById('todas-peliculas').addEventListener('click', function (event) {
+                event.preventDefault();
+                fetch("http://localhost:5000/peliculas")
+                    .then(respuesta_recivida)
+                    .then(mostrar_peliculas)
+                    .catch(error);
+            });
+
             fetch("http://localhost:5000/peliculas")
                 .then(respuesta_recivida)
                 .then(mostrar_peliculas)
                 .catch(error);
+
+            fetch("http://localhost:5000/plataformas")
+                .then(respuesta_recivida)
+                .then(mostrar_plataformas)
+                .catch(error);
         });
 
-        fetch("http://localhost:5000/plataformas")
-            .then(respuesta_recivida)
-            .then(mostrar_plataformas)
-            .catch(error)
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+
 </html>
+
