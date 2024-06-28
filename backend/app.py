@@ -59,6 +59,29 @@ def mostrar_pelicula(id_pelicula):
     except Exception as error:
         print("Error: ", error)
         return jsonify({"mensaje": "error interno del servidor"}), 500 
+    
+@app.route("/plataformas", methods=["GET"])
+def plataformas():
+    try:
+        plataformas= Plataforma.query.all()
+        plataformas_data= []
+
+        for i in plataformas:
+            plataforma_data= {
+                "id": i.id,
+                "nombre": i.nombre,
+                "imagen": i.imagen
+            }
+            plataformas_data.append(plataforma_data)
+
+        return jsonify(plataformas_data)
+    
+    except Exception as error:
+        print("Error: ", error)
+        return jsonify({"mensaje": "error interno del servidor"}), 500
+
+
+
 
 
 @app.route('/opinion', methods=['POST'])
