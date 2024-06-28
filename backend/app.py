@@ -5,10 +5,10 @@ from sqlalchemy import or_
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://joaco:joaco2005@localhost:5432/peliculas_web'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:mingo21@localhost:5432/movies_web_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -59,29 +59,45 @@ def mostrar_pelicula(id_pelicula):
     except Exception as error:
         print("Error: ", error)
         return jsonify({"mensaje": "error interno del servidor"}), 500 
-    
-@app.route("/plataformas", methods=["GET"])
-def plataformas():
+
+
+@app.route('/plataformas', methods=['GET'])
+def obtener_plataformas():
     try:
-        plataformas= Plataforma.query.all()
-        plataformas_data= []
-
-        for i in plataformas:
-            plataforma_data= {
-                "id": i.id,
-                "nombre": i.nombre,
-                "imagen": i.imagen
-            }
-            plataformas_data.append(plataforma_data)
-
-        return jsonify(plataformas_data)
-    
+        plataformas = Plataforma.query.all()
+        respuesta = [{
+            'id': plataforma.id,
+            'nombre': plataforma.nombre
+        } for plataforma in plataformas]
+        return jsonify(respuesta)
     except Exception as error:
         print("Error: ", error)
         return jsonify({"mensaje": "error interno del servidor"}), 500
 
+@app.route("/plataformas/<int:id_plataforma>/peliculas", methods=["GET"])
+def peliculas_por_plataforma(id_plataforma):
+    try:
+        plataforma = Plataforma.query.get(id_plataforma)
 
+        if not plataforma:
+            return jsonify({'mensaje': 'Plataforma no encontrada'}), 404
 
+        peliculas = plataforma.peliculas.all()
+        respuesta = [{
+            'id': peli.id,
+            'titulo': peli.titulo,
+            'sinopsis': peli.sinopsis,
+            'estreno': peli.estreno,
+            'director': peli.director,
+            'genero': peli.genero,
+            'imagen': peli.imagen
+        } for peli in peliculas]
+
+        return jsonify(respuesta)
+
+    except Exception as error:
+        print("Error: ", error)
+        return jsonify({"mensaje": "error interno del servidor"}), 500
 
 
 @app.route('/opinion', methods=['POST'])
