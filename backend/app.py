@@ -12,6 +12,37 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:ming
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+@app.route('/agregar_pelicula', methods=['POST'])
+def agregar_pelicula():
+    titulo = request.json.get('titulo')
+    sinopsis = request.json.get('sinopsis')
+    estreno = request.json.get('estreno')
+    director = request.json.get('director')
+    genero = request.json.get('genero')
+    plataformas_ids = request.json.get('plataformas')  
+    imagen = request.json.get('imagen')
+
+    if not (titulo and sinopsis and estreno and director and genero and plataformas_ids):
+        return jsonify({'mensaje': 'Todos los campos son requeridos'}), 400
+
+    pelicula = Pelicula(
+        titulo=titulo,
+        sinopsis=sinopsis,
+        estreno=estreno,
+        director=director,
+        genero=genero,
+        imagen=imagen
+    )
+
+    for plataforma_id in plataformas_ids:
+        plataforma = Plataforma.query.get(plataforma_id)
+        if plataforma:
+            pelicula.plataformas.append(plataforma)
+
+    db.session.add(pelicula)
+    db.session.commit()
+
+    return jsonify({'mensaje': 'Pelicula agregada correctamente'}), 201
 
 @app.route('/peliculas', methods=['GET'])
 def mostar_peliculas():
@@ -67,7 +98,8 @@ def obtener_plataformas():
         plataformas = Plataforma.query.all()
         respuesta = [{
             'id': plataforma.id,
-            'nombre': plataforma.nombre
+            'nombre': plataforma.nombre,
+            'imagen': plataforma.imagen
         } for plataforma in plataformas]
         return jsonify(respuesta)
     except Exception as error:
@@ -112,7 +144,7 @@ def hacer_reseña():
         db.session.add(nueva_reseña)
         db.session.commit()
         respuesta = make_response(jsonify({'mensaje': 'Reseña creada exitosamente'}))
-        respuesta.headers['Access-Control-Allow-Origin'] = '*'  # Permite solicitudes de cualquier origen
+        respuesta.headers['Access-Control-Allow-Origin'] = '*' 
         return respuesta
     except Exception as error:
         print("Error: ", error)

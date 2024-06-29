@@ -124,3 +124,7 @@ a {
 .carta-container:hover {
     transform: scale(1.05); 
 }
+
+.sinopsis {
+    text-align: justify;
+}
