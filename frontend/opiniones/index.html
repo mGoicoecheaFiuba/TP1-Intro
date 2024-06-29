@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Mis reseña!</title>
+</head>
+
+
+<body>
+   <h1>Mis reseñas</h1>
+   <ul id="opiniones"></ul>
+  
+   <script>
+       function respuesta_recibida(data){
+           return data.json()
+       }
+
+
+       function error(mensaje){
+           console.log(mensaje)
+           return mensaje
+       }
+
+
+       function mostrar_opiniones(data){
+           console.log("Datos de la opinión:", data);
+           let listado = document.getElementById("opiniones")
+           listado.innerHTML = ""
+      
+           for (let i = 0; i < data.length; i++) {
+               let item = document.createElement("li")
+               item.innerHTML = data[i].titulo_pelicula
+
+
+               let valoracion = document.createElement("label")
+               valoracion.innerHTML = "valoracion: " + data[i].valoracion
+
+
+               let comentario = document.createElement("label")
+               comentario.innerHTML = "comentario: " + data[i].comentario
+
+
+               let eliminar = document.createElement("button")
+               eliminar.onclick = function(){
+                   eliminar_opinion(data[i].id)
+               }
+               eliminar.innerHTML = "Eliminar"
+
+
+               let editar = document.createElement("button")
+               editar.onclick = function(){
+                   window.location.href = `http://localhost:8000/opiniones/editar?id=${data[i].id}&id_pelicula=${data[i].pelicula_id}`
+               }
+               editar.innerHTML = "Editar"
+
+
+               listado.appendChild(item)
+               listado.appendChild(valoracion)
+               listado.appendChild(document.createElement("br"))
+               listado.appendChild(comentario)
+               listado.appendChild(document.createElement("br"))
+               listado.appendChild(eliminar)
+               listado.appendChild(editar)
+           }
+       }
+
+
+       fetch(`http://localhost:5000/opiniones`)
+           .then(respuesta_recibida)
+           .then(mostrar_opiniones)
+           .catch(error);
+
+
+      
+           function eliminar_response(data) {
+               window.location.href = "/opiniones/"}
+
+
+
+
+       function eliminar_opinion(id){
+           fetch(`http://localhost:5000/opiniones/${id}`, {
+               method: "DELETE"
+           })
+           .then((data) => data.json())
+           .then(eliminar_response)
+           .catch(error);
+       }
+   </script>
+
+
+</body>
+</html>

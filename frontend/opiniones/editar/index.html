@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Editar Opiniones</title>
+</head>
+<body>
+   <h1>Editar Opiniones</h1>
+   <h2 id="titulo" ></h2>
+   <form id="formulario" onsubmit="editar(event)">
+       <label id="valoracion-label" for="valoracion">Valoración</label>
+       <input type="number" id="valoracion" name="valoracion" required>
+       <br>
+       <label for="comentario" id="comentario-label">Comentario</label>
+       <input type="text" id="comentario" name="comentario" required>
+       <button type="submit">Guardar</button>
+   </form>
+
+
+   <script>
+       // obtengo el id de la pelicula de la url
+       const urlParams = new URLSearchParams(window.location.search)
+       const id = urlParams.get('id')
+       const id_pelicula = urlParams.get('id_pelicula')
+      
+
+
+       // fetch del endpoint opiniones, metodo GET, y funciones de respuesta y error
+      function respuesta(data){
+           return data.json()
+       }
+
+
+       function error_recibido(mensaje){
+           console.log("error:",mensaje)
+           return mensaje
+       }
+
+
+       function respuesta_recibida(data){
+           console.log("esta es la data: ", data)
+
+
+           let datos = document.getElementById("titulo")
+           datos.innerHTML = ""
+
+
+           let titulo_pelicula = document.createElement("h2")
+           titulo_pelicula.innerHTML = data.titulo
+           datos.appendChild(titulo_pelicula)
+
+
+       }
+
+
+       fetch(`http://localhost:5000/opiniones/${id}`)
+                   .then(respuesta)
+                   .then(respuesta_recibida)
+                   .catch(error_recibido)
+
+
+
+
+                  
+
+
+      
+
+
+       // funcion para editar la opinion
+       function editar(event){
+           event.preventDefault()
+           const urlParams = new URLSearchParams(window.location.search)
+           const id = urlParams.get('id')
+           const comentario = document.getElementById('comentario').value
+           const valoracion = document.getElementById('valoracion').value
+
+
+           // fetch de la funcion editar, metodo PUT, y funciones de respuesta y error
+
+
+           function parsedata(res){
+               window.location.href = "/"
+               console.log("esto es lo que se envia",res)
+               return res
+           }
+           function error(mensaje){
+               alert("error al editar la opinion")
+               console.log("esto no funciona")
+               console.log("error:",mensaje)
+               return mensaje
+           }
+
+
+           fetch(`http://localhost:5000/opinion/${id}`, {
+               method: 'PUT',
+               headers: {
+                   'Access-Control-Allow-Headers':'PUT',                  
+                   'Content-Type': 'application/json',
+                   'Access-Control-Allow-Origin': '*'
+               },
+               body: JSON.stringify({
+               "comentario": comentario,
+               "valoracion": parseInt(valoracion),
+               "opinion_id": parseInt(id),
+               "pelicula_id": parseInt(id_pelicula) 
+           })
+           })
+           .then(res => res.json())
+           .then(parsedata)
+           .catch(error)
+       }
+
+
+
+
+   </script>
+</body>
+</html>
