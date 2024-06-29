@@ -1,0 +1,126 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #444444;
+    background: linear-gradient(to bottom, #363636, #121212);
+    color: #ffffff; 
+    margin: 0;
+    padding: 0;
+}
+
+
+a {
+    text-decoration: none;
+    color: white;
+}
+/*------------------------------------------Seccion Header----------------*/
+
+.titulo {
+    text-align: center;
+    color: aliceblue;
+    margin-left: 10px;
+}
+
+.nav-container{
+    padding-left: 3px;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    justify-content: space-between;
+}
+
+.form-busqueda {
+    margin-left: 2rem;
+    height: 30px;
+    width: 30rem;
+    display: flex;
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.form-busqueda input{
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: none;
+    font-weight: 500;
+    background: transparent;
+}
+
+.form-busqueda button {
+    background: none;
+    border: none;
+    height: auto;
+    width: auto;
+}
+.fa-search{
+    color: #000000;
+    font-size: 20px;
+}
+
+.nav-plataformas {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    justify-content: flex-end;
+    margin-right: 2rem;
+}
+
+.img-plataforma {
+    height: 3.5rem;
+    width: 4rem;
+    border-radius: 10px;
+
+}
+
+.a-todas {
+    background-color: beige;
+    height: 3.5rem;
+    width: 4rem;
+    border-radius: 10px;
+    color: #2c2c2c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.a-todas i{
+    font-size: 25px;
+}
+
+/*------------------------------------------Seccion Peliculas----------------*/
+
+.pelis-container {
+    padding: 0 2rem 0 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items:end;
+    gap: 2%;
+}
+
+.carta-imagen{
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.carta-container {
+    border: 2px solid rgb(57, 57, 57);
+    margin: 2rem 0 2rem 0;
+    width: 15rem; 
+    height: 20rem; 
+    background-color: #470404; 
+    overflow: hidden;
+    border-radius: 3px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease;
+}
+
+.carta-container:hover {
+    transform: scale(1.05); 
+}
