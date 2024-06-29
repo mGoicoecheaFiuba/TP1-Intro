@@ -1,54 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reseña!</title>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Reseña!</title>
 </head>
 <body>
-    <h1>Hacer reseña!</h1>
-    <form onsubmit="hacer_opinion(event)">
-        <input type="hidden" id="pelicula_id">
-        <label for="valoracion">Valoración</label>
-        <input type="number" id="valoracion" required>
+   <h1>Hacer reseña!</h1>
+   <h2 id="Titulo_pelicula"></h2>
+   <form onsubmit="hacer_opinion(event)">
+       <label for="valoracion">Valoración</label>
+       <input type="number" id="valoracion" required>
 
-        <label for="comentario">Comentario</label>
-        <input type="text" id="comentario" name="comentario" required>
 
-        <button type="submit">Enviar</button>
-    </form>
+       <label for="comentario">Comentario</label>
+       <input type="text" id="comentario" name="comentario" required>
 
-    <script>
-        function hacer_opinion(event) {
-            event.preventDefault();
-            const id = document.getElementById('pelicula_id').value;
-            const comentario = document.getElementById('comentario').value;
-            const valoracion = document.getElementById('valoracion').value;
 
-            const data = {
-                "comentario": comentario,
-                "valoracion": valoracion,
-                "pelicula_id": id
-            }
-            fetch('http://localhost:5000/opinion', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-            })
-        }
+       <button type="submit">Enviar</button>
+   </form>
 
-        document.addEventListener("DOMContentLoaded", function(){
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            document.getElementById('pelicula_id').value = id;
-        });
-    </script>
+
+   <script>
+       function respuesta(data){
+           return data.json()
+       }
+
+
+       function error_recibido(err){
+           console.error("Error al realizar la petición:", err)
+       }
+
+
+       const urlParams = new URLSearchParams(window.location.search);
+       const id = urlParams.get('id')
+       function mostrar_pelicula(data) {
+           let datos = document.getElementById("Titulo_pelicula")
+           datos.innerHTML = ""
+          
+           let titulo_pelicula = document.createElement("h2")
+           titulo_pelicula.innerHTML = data.titulo
+           datos.appendChild(titulo_pelicula)
+           let imagen = document.createElement("img")
+           imagen.src = data.imagen
+           datos.appendChild(imagen)
+       }
+
+
+       fetch(`http://localhost:5000/peliculas/${id}`)
+                   .then(respuesta)
+                   .then(mostrar_pelicula)
+                   .catch(error_recibido)
+
+
+
+
+
+
+       function respuesta_recibida(data){
+           // Verifica si la respuesta contiene un mensaje de error
+            window.location.href = "/"
+           if (data.mensaje && data.mensaje === "error interno del servidor") {
+               alert("No se pudo agregar la reseña. Solo se permite una reseña por película.")
+           }
+           
+       }
+
+
+       function error(err){
+           console.error("Error al realizar la petición:", err)
+           alert("Solo se permite una reseña por pelicula.")
+       }
+
+
+       function hacer_opinion(event) {           
+           event.preventDefault()
+           const urlParams = new URLSearchParams(window.location.search)
+           const id = urlParams.get('id')
+           const comentario = document.getElementById('comentario').value
+           const valoracion = document.getElementById('valoracion').value
+
+
+
+
+           fetch('http://localhost:5000/opinion', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json',
+                   'Access-Control-Allow-Origin': '*'
+               },
+               body: JSON.stringify(data = {
+               "comentario": comentario,
+               "valoracion": valoracion,
+               "pelicula_id": id
+           })
+           })
+           .then(response => {
+               if (!response.ok) {
+               }
+               return response.json()
+           })
+           .then(respuesta_recibida)
+           .catch(error);
+       }
+   </script>
 </body>
 </html>
