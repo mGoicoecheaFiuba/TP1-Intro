@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,21 +14,21 @@
             <h2 id="Titulo_pelicula"></h2>
         </div>
         <form onsubmit="hacer_opinion(event)" class="contenedor">
-                <div class="star-widget">
-                    <input type="radio" name="rate" id="rate-5">
+                <div class="star-widget" id="valoracion">
+                    <input type="radio" name="rate" id="rate-5" value="5">
                     <label for="rate-5" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-4">
+                    <input type="radio" name="rate" id="rate-4" value="4">
                     <label for="rate-4" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-3">
+                    <input type="radio" name="rate" id="rate-3" value="3">
                     <label for="rate-3" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-2">
+                    <input type="radio" name="rate" id="rate-2" value="2">
                     <label for="rate-2" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-1">
+                    <input type="radio" name="rate" id="rate-1" value="1">
                     <label for="rate-1" class="fas fa-star"></label>
                 </div>
                 <header></header>
                 <div class="textarea">
-                    <textarea cols="100" placeholder="Opina sobre la pelicula"></textarea>
+                    <textarea id="comentario" cols="100" placeholder="Opina sobre la pelicula"></textarea>
                 </div>
                 <div class="btn">
                     <button type="submit">Enviar</button>
@@ -53,7 +53,6 @@
        function mostrar_pelicula(data) {
            let datos = document.getElementById("Titulo_pelicula")
            datos.innerHTML = ""
-          
            let titulo_pelicula = document.createElement("h2")
            titulo_pelicula.innerHTML = data.titulo
            datos.appendChild(titulo_pelicula)
@@ -74,10 +73,15 @@
 
 
        function respuesta_recibida(data){
+        console.log(data)
            // Verifica si la respuesta contiene un mensaje de error
-            window.location.href = "/"
+           
            if (data.mensaje && data.mensaje === "error interno del servidor") {
                alert("No se pudo agregar la reseña. Solo se permite una reseña por película.")
+           }
+           else {
+               alert("Reseña agregada con éxito!")
+               window.location.href = "/"
            }
            
        }
@@ -85,7 +89,6 @@
 
        function error(err){
            console.error("Error al realizar la petición:", err)
-           alert("Solo se permite una reseña por pelicula.")
        }
 
 
@@ -94,10 +97,7 @@
            const urlParams = new URLSearchParams(window.location.search)
            const id = urlParams.get('id')
            const comentario = document.getElementById('comentario').value
-           const valoracion = document.getElementById('valoracion').value
-
-
-
+           const valoracion = document.querySelector('input[name="rate"]:checked').value
 
            fetch('http://localhost:5000/opinion', {
                method: 'POST',
