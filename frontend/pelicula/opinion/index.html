@@ -3,22 +3,38 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="estilo.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
    <title>Reseña!</title>
 </head>
 <body>
    <h1>Hacer reseña!</h1>
-   <h2 id="Titulo_pelicula"></h2>
-   <form onsubmit="hacer_opinion(event)">
-       <label for="valoracion">Valoración</label>
-       <input type="number" id="valoracion" required>
-
-
-       <label for="comentario">Comentario</label>
-       <input type="text" id="comentario" name="comentario" required>
-
-
-       <button type="submit">Enviar</button>
-   </form>
+   <section class="contenedor-principal">
+        <div class="contenedor-info">
+            <h2 id="Titulo_pelicula"></h2>
+        </div>
+        <form onsubmit="hacer_opinion(event)" class="contenedor">
+                <div class="star-widget">
+                    <input type="radio" name="rate" id="rate-5">
+                    <label for="rate-5" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-4">
+                    <label for="rate-4" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-3">
+                    <label for="rate-3" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-2">
+                    <label for="rate-2" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-1">
+                    <label for="rate-1" class="fas fa-star"></label>
+                </div>
+                <header></header>
+                <div class="textarea">
+                    <textarea cols="100" placeholder="Opina sobre la pelicula"></textarea>
+                </div>
+                <div class="btn">
+                    <button type="submit">Enviar</button>
+                </div>
+        </form>
+    </section>
 
 
    <script>
