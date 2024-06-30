@@ -1,7 +1,9 @@
-* {
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -13,6 +15,16 @@ body {
     justify-content: center;
     min-height: 100vh;
     font-family: "Poppins", sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: #ffffff;
+    transition: 0.2 ease;
+}
+
+a:hover {
+    color: #fd4;
 }
 
 .pelicula-container {
@@ -65,7 +77,7 @@ ul{
     list-style: none;
 }
 
-a {
+.peli-info-container a {
     text-decoration: none;
     background: transparent;
     color: #f1c40f;
@@ -76,7 +88,7 @@ a {
     margin-left: auto;
 }
 
-a:hover {
+.peli-info-container a:hover {
     background: #f1c40f;
     color: #000;
 

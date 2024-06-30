@@ -10,8 +10,18 @@ html, body {
   height: 100%;
   place-items: center;
   text-align: center;
-  background: linear-gradient(to bottom, #363636, #121212);
+  background: #000;
   color: #eee;
+}
+
+a {
+  text-decoration: none;
+  color: #eee;
+  transition: 0.2 ease;
+}
+
+a:hover{
+  color: #fd4;
 }
 
 .contenedor-principal {
@@ -67,26 +77,6 @@ color: #fd4;
 input#rate-5:checked ~ label{
 color: #fe7;
 text-shadow: 0 0 20px #952;
-}
-
-#rate-1:checked ~ form header:before{
-content: "I just hate it ";
-}
-
-#rate-2:checked ~ form header:before{
-content: "I don't like it ";
-}
-
-#rate-3:checked ~ form header:before{
-content: "It is awesome ";
-}
-
-#rate-4:checked ~ form header:before{
-content: "I just like it ";
-}
-
-#rate-5:checked ~ form header:before{
-content: "I just love it ";
 }
 
 .container form{
@@ -148,3 +138,4 @@ form .btn button:hover{
   background: #f1c40f;
   color: #000;
 }
+

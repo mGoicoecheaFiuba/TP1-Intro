@@ -3,39 +3,39 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="estiloEditar.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-   <title>Editar Opiniones</title>
+   <link rel="stylesheet" href="editarOpinion.css">
+   <title>Criticine</title>
 </head>
 <body>
-   <h1>Editar Opiniones</h1>
-   <section class="contenedor-principal">
-    <div class="contenedor-info">
-        <h2 id="Titulo_pelicula"></h2>
-        <div id="imagen-pelicula"></div>
-    </div>
-    <form onsubmit="editar(event)" class="contenedor">
-            <div class="star-widget">
-                <input type="radio" name="rate" id="rate-5" value="5">
-                <label for="rate-5" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-4" value="4">
-                <label for="rate-4" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-3" value="3">
-                <label for="rate-3" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-2" value="2">
-                <label for="rate-2" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-1" value="1">
-                <label for="rate-1" class="fas fa-star"></label>
-            </div>
-            <header></header>
-            <div class="textarea">
-                <textarea cols="100" placeholder="Opina sobre la pelicula" id="comentario"></textarea>
-            </div>
-            <div class="btn">
-                <button type="submit">Editar</button>
-            </div>
-    </form>
-</section>
+    <a href="/" class="a-titulo"><h1>CritiCine</h1></a>
+    <section class="contenedor-principal">
+        <div class="contenedor-info">
+            <h2 id="Titulo_pelicula"></h2>
+            <div id="imagen-pelicula"></div>
+        </div>
+        <form onsubmit="editar(event)" class="contenedor">
+                <div class="star-widget">
+                    <input type="radio" name="rate" id="rate-5" value="5">
+                    <label for="rate-5" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-4" value="4">
+                    <label for="rate-4" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-3" value="3">
+                    <label for="rate-3" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-2" value="2">
+                    <label for="rate-2" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-1" value="1">
+                    <label for="rate-1" class="fas fa-star"></label>
+                </div>
+                <header></header>
+                <div class="textarea">
+                    <textarea cols="100" placeholder="Opina sobre la pelicula" id="comentario"></textarea>
+                </div>
+                <div class="btn">
+                    <button type="submit">Editar</button>
+                </div>
+        </form>
+    </section>
 
    <script>
        const urlParams = new URLSearchParams(window.location.search)
