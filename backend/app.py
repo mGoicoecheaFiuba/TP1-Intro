@@ -8,42 +8,12 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:mingo21@localhost:5432/movies_web_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://joaco:joaco2005@localhost:5432/peliculas_web'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-@app.route('/agregar_pelicula', methods=['POST'])
-def agregar_pelicula():
-    titulo = request.json.get('titulo')
-    sinopsis = request.json.get('sinopsis')
-    estreno = request.json.get('estreno')
-    director = request.json.get('director')
-    genero = request.json.get('genero')
-    plataformas_ids = request.json.get('plataformas')  
-    imagen = request.json.get('imagen')
 
-    if not (titulo and sinopsis and estreno and director and genero and plataformas_ids):
-        return jsonify({'mensaje': 'Todos los campos son requeridos'}), 400
-
-    pelicula = Pelicula(
-        titulo=titulo,
-        sinopsis=sinopsis,
-        estreno=estreno,
-        director=director,
-        genero=genero,
-        imagen=imagen
-    )
-
-    for plataforma_id in plataformas_ids:
-        plataforma = Plataforma.query.get(plataforma_id)
-        if plataforma:
-            pelicula.plataformas.append(plataforma)
-
-    db.session.add(pelicula)
-    db.session.commit()
-
-    return jsonify({'mensaje': 'Pelicula agregada correctamente'}), 201
-
+# Ruta para obtener todas las peliculas
 @app.route('/peliculas', methods=['GET'])
 def mostar_peliculas():
     try:
@@ -70,7 +40,7 @@ def mostar_peliculas():
         print("Error", error)
         return jsonify({"mensaje": "error interno del servidor"}), 500  
 
-
+# Ruta para obtener una pelicula por id
 @app.route('/peliculas/<id_pelicula>', methods=['GET'])
 def mostrar_pelicula(id_pelicula):
     try:
@@ -108,7 +78,7 @@ def obtener_plataformas():
         return jsonify({"mensaje": "error interno del servidor"}), 500
 
 
-#Ruta para obtener la info de las pelis filtradas por plataformas
+# Ruta para obtener la info de las pelis filtradas por plataformas
 @app.route("/plataformas/<int:id_plataforma>/peliculas", methods=["GET"])
 def peliculas_por_plataforma(id_plataforma):
     try:
@@ -155,7 +125,7 @@ def hacer_reseña():
        return jsonify({"mensaje": "error interno del servidor"}), 500
 
 
-# Ruta para mostrar todas las opiniones
+# Ruta para obtener todas las opiniones
 @app.route('/opiniones', methods=['GET'])
 def mostrar_opiniones():
   try:
@@ -212,7 +182,7 @@ def editar_opinion(id_opinion):
 
 
 
-# Ruta para mostrar una opinion
+# Ruta para obtener una opinion
 @app.route('/opiniones/<id_opinion>', methods=['GET'])
 def mostar_opinion(id_opinion):
    try:
