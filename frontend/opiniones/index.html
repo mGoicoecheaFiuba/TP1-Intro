@@ -3,13 +3,17 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+   <link rel="stylesheet" href="estiloOpiniones.css">
    <title>Mis reseña!</title>
 </head>
 
 
 <body>
    <h1>Mis reseñas</h1>
-   <ul id="opiniones"></ul>
+   <section class="opiniones-contenedor">
+        <div id="opiniones"></div> 
+    </section>
   
    <script>
        function respuesta_recibida(data){
@@ -29,12 +33,18 @@
            listado.innerHTML = ""
       
            for (let i = 0; i < data.length; i++) {
-               let item = document.createElement("li")
-               item.innerHTML = data[i].titulo_pelicula
+               let titulo = document.createElement("h2")
+               titulo.innerHTML = data[i].titulo_pelicula
 
-
-               let valoracion = document.createElement("label")
-               valoracion.innerHTML = "valoracion: " + data[i].valoracion
+               let opinion = document.createElement("div")
+               opinion.setAttribute("class", "opinion")
+               let valoracion = data[i].valoracion
+               
+               for (let i=0; i < valoracion; i++){
+                    let valoracion = document.createElement("label")
+                    valoracion.setAttribute("for","rate")
+                    valoracion.setAttribute("class", "fas fa-star")
+               }
 
 
                let comentario = document.createElement("label")
@@ -53,15 +63,21 @@
                    window.location.href = `http://localhost:8000/opiniones/editar?id=${data[i].id}&id_pelicula=${data[i].pelicula_id}`
                }
                editar.innerHTML = "Editar"
+               let botones = document.createElement("div")
+               botones.setAttribute("class", "botones")
 
+               let info = document.createElement("div")
+               info.setAttribute("class", "info-contenedor")
 
-               listado.appendChild(item)
-               listado.appendChild(valoracion)
-               listado.appendChild(document.createElement("br"))
-               listado.appendChild(comentario)
-               listado.appendChild(document.createElement("br"))
-               listado.appendChild(eliminar)
-               listado.appendChild(editar)
+               listado.appendChild(opinion)
+               opinion.appendChild(titulo)
+               info.appendChild(valoracion)
+               info.appendChild(comentario)
+               opinion.appendChild(info)
+               botones.appendChild(eliminar)
+               botones.appendChild(editar)
+               info.appendChild(botones)
+
            }
        }
 

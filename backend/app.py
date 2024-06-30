@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 port = 5000
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://joaco:joaco2005@localhost:5432/peliculas_web'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://marianogoico:mingo21@localhost:5432/movies_web_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -92,6 +92,7 @@ def mostrar_pelicula(id_pelicula):
         return jsonify({"mensaje": "error interno del servidor"}), 500 
 
 
+# Ruta para obtener la info de las plataformas
 @app.route('/plataformas', methods=['GET'])
 def obtener_plataformas():
     try:
@@ -106,6 +107,8 @@ def obtener_plataformas():
         print("Error: ", error)
         return jsonify({"mensaje": "error interno del servidor"}), 500
 
+
+#Ruta para obtener la info de las pelis filtradas por plataformas
 @app.route("/plataformas/<int:id_plataforma>/peliculas", methods=["GET"])
 def peliculas_por_plataforma(id_plataforma):
     try:
@@ -116,14 +119,14 @@ def peliculas_por_plataforma(id_plataforma):
 
         peliculas = plataforma.peliculas.all()
         respuesta = [{
-            'id': peli.id,
-            'titulo': peli.titulo,
-            'sinopsis': peli.sinopsis,
-            'estreno': peli.estreno,
-            'director': peli.director,
-            'genero': peli.genero,
-            'imagen': peli.imagen
-        } for peli in peliculas]
+            'id': pelicula.id,
+            'titulo': pelicula.titulo,
+            'sinopsis': pelicula.sinopsis,
+            'estreno': pelicula.estreno,
+            'director': pelicula.director,
+            'genero': pelicula.genero,
+            'imagen': pelicula.imagen
+        } for pelicula in peliculas]
 
         return jsonify(respuesta)
 
@@ -213,15 +216,16 @@ def editar_opinion(id_opinion):
 @app.route('/opiniones/<id_opinion>', methods=['GET'])
 def mostar_opinion(id_opinion):
    try:
-       peliculas= Pelicula.query.all()
        opinion = Opinion.query.get(id_opinion)
+       pelicula = Pelicula.query.get(opinion.pelicula_id)
        if not opinion:
            return jsonify({'mensaje': 'Opinion no encontrada'}), 404
        return jsonify({
            'id': opinion.id,
            'titulo':Pelicula.query.filter_by(id=opinion.pelicula_id).first().titulo,
            'valoracion': opinion.valoracion,
-           'comentario': opinion.comentario
+           'comentario': opinion.comentario,
+           'imagen': pelicula.imagen
        })
    except Exception as error:
        print("Error: ", error)
