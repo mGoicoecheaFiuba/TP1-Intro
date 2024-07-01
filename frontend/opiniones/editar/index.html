@@ -75,13 +75,12 @@
            const valoracion = document.querySelector('input[name="rate"]:checked').value
 
            function parsedata(res){
-               window.location.href = "/"
+               window.location.href = "/opiniones/"
                console.log("esto es lo que se envia",res)
                return res
            }
            function error(mensaje){
                alert("error al editar la opinion")
-               console.log("esto no funciona")
                console.log("error:",mensaje)
                return mensaje
            }

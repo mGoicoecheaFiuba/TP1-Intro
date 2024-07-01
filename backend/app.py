@@ -13,14 +13,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Ruta para obtener todas las peliculas
+# Ruta para obtener todas las peliculas o filtradas por el buscador
 @app.route('/peliculas', methods=['GET'])
 def mostar_peliculas():
     try:
+        #Setea el valor del input de busqueda, si no hay es = None
         buscar = request.args.get('buscar', None)
 
         if buscar:
             peliculas = Pelicula.query.filter(or_(Pelicula.titulo.ilike(f'%{buscar}%')))
+            #or_ permite aplicar condiciones de filtro, ilike realiza la busqueda(insensible a may y min)
         else:
             peliculas = Pelicula.query.all()
 
@@ -32,7 +34,7 @@ def mostar_peliculas():
             'director': peli.director,
             'genero': peli.genero,
             'imagen': peli.imagen,
-            'plataformas': [plataforma.nombre for plataforma in peli.plataformas]
+            'plataformas': [plataforma.nombre for plataforma in peli.plataformas] #se usa la tabla relacional
         } for peli in peliculas]
 
         return jsonify(respuesta)
@@ -117,8 +119,10 @@ def hacer_reseña():
        )
        db.session.add(nueva_reseña)
        db.session.commit()
+       #los siguientes renglones solucionan los problemas de CORS
        respuesta = make_response(jsonify({'mensaje': 'Reseña creada exitosamente'}))
-       respuesta.headers['Access-Control-Allow-Origin'] = '*'  # Permite solicitudes de cualquier origen
+       respuesta.headers['Access-Control-Allow-Origin'] = '*'  # Permite solicitudes de cualquier origen 
+
        return respuesta
    except Exception as error:
        print("Error: ", error)
@@ -133,7 +137,7 @@ def mostrar_opiniones():
       peliculas = Pelicula.query.all()
       respuesta = [{
           'id': opinion.id,
-          'titulo_pelicula': Pelicula.query.filter_by(id=opinion.pelicula_id).first().titulo,
+          'titulo_pelicula': Pelicula.query.filter_by(id=opinion.pelicula_id).first().titulo, #esto es un JOIN de tabla opinion y tabla pelicula
           'pelicula_id': opinion.pelicula_id,
           'valoracion': opinion.valoracion,
           'comentario': opinion.comentario
@@ -192,7 +196,7 @@ def mostar_opinion(id_opinion):
            return jsonify({'mensaje': 'Opinion no encontrada'}), 404
        return jsonify({
            'id': opinion.id,
-           'titulo':Pelicula.query.filter_by(id=opinion.pelicula_id).first().titulo,
+           'titulo':Pelicula.query.filter_by(id=opinion.pelicula_id).first().titulo, #otro JOIN
            'valoracion': opinion.valoracion,
            'comentario': opinion.comentario,
            'imagen': pelicula.imagen

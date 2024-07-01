@@ -18,6 +18,7 @@ class Pelicula(db.Model):
     genero = db.Column(db.String(255), nullable=False)
     # relacion con plataformas
     plataformas = db.relationship('Plataforma', secondary=peliculas_plataformas, backref=db.backref('peliculas', lazy='dynamic'))
+    # Agrega el atributo peliculas a la clase Plataforma, dynamic sirve para filtrar y ordenar resultados
     imagen = db.Column(db.String(255))
 
 class Plataforma(db.Model):
